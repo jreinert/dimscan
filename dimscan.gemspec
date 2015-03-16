@@ -7,15 +7,17 @@ Gem::Specification.new do |spec|
   spec.name          = 'dimscan'
   spec.version       = Dimscan::VERSION
   spec.authors       = ['Joakim Reinert']
-  spec.email         = ['reinert@meso.net']
+  spec.email         = ['mail@jreinert.net']
 
-  spec.metadata['allowed_push_host'] = 'NONE' if spec.respond_to?(:metadata)
+  if spec.respond_to?(:metadata)
+    spec.metadata['allowed_push_host'] = 'https://rubygems.org'
+  end
 
   spec.summary       = 'Scans dimensions from hosted images'
   spec.description   = 'Bandwith efficient scanner for dimensions of web ' \
                        'hosted images'
-  spec.homepage      = 'https://git.meso.net/ws/dimscan'
-  spec.license       = 'other'
+  spec.homepage      = 'https://github.com/jreinert/dimscan'
+  spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(/^(test|spec|features)\//)
