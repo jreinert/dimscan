@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'dimscan/base_scanner'
 
 # BaseScanner specs

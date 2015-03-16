@@ -1,5 +1,6 @@
+require 'spec_helper'
+require 'support/scanner_spec'
 require 'dimscan/png_scanner'
-require './spec/support/scanner_spec'
 
 # "JPEG example JPG RIP 100" by Original uploader was Toytoy at en.wikipedia -
 # Transferred from en.wikipedia; transferred to Commons by User:Masur using

@@ -1,6 +1,7 @@
-require 'dimscan/http_byte_enumerator'
 require 'uri'
 require 'net/http'
+require 'spec_helper'
+require 'dimscan/http_byte_enumerator'
 
 # HTTPByteEnumerator specs
 module Dimscan
