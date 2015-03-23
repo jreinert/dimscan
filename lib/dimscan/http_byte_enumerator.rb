@@ -4,6 +4,25 @@ require 'net/http'
 module Dimscan
   # A utility class for enumerating over the bytes of a http response body
   class HTTPByteEnumerator
+    @connections = {}
+    class << self
+      def open_connection(host, port, ssl)
+        @connections[host] ||= {}
+        @connections[host][port] ||= {}
+        @connections[host][port][ssl] ||= Net::HTTP.start(
+          host, port, use_ssl: ssl
+        )
+      end
+
+      def close_connections
+        @connections.values.each do |ports|
+          ports.values.each do |connections|
+            connections.values.each(&:finish)
+          end
+        end
+      end
+    end
+
     def initialize(url)
       @uri = URI(url)
       fail ArgumentError, 'invalid scheme' unless @uri.scheme =~ /^https?$/
@@ -12,13 +31,12 @@ module Dimscan
     def each(&block)
       return to_enum(__callee__) unless block_given?
       request = Net::HTTP::Get.new(@uri)
-      Net::HTTP.start(
-        @uri.host, @uri.port, use_ssl: @uri.scheme == 'https'
-      ) do |http|
-        http.request(request) do |response|
-          fail response.body if error?(response)
-          enumerate_response(response, &block)
-        end
+      http = self.class.open_connection(
+        @uri.host, @uri.port, @uri.scheme == 'https'
+      )
+      http.request(request) do |response|
+        fail response.body if error?(response)
+        enumerate_response(response, &block)
       end
     end
 
