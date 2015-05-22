@@ -22,6 +22,7 @@ module Dimscan
         dimensions || MiniMagick::Image.new(@fallback_file).dimensions
       )
 
+      File.delete(@fallback_file)
       { width: width, height: height }
     end
 
