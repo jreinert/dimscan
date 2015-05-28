@@ -1,9 +1,16 @@
 require 'uri'
-require 'net/http'
+require 'net/http/persistent'
 
 module Dimscan
   # A utility class for enumerating over the bytes of a http response body
   class HTTPByteEnumerator
+
+    class << self
+      def http
+        @http ||= Net::HTTP::Persistent.new('dimscan')
+      end
+    end
+
     def initialize(url)
       @uri = URI(url)
       fail ArgumentError, 'invalid scheme' unless @uri.scheme =~ /^https?$/
@@ -11,14 +18,9 @@ module Dimscan
 
     def each(&block)
       return to_enum(__callee__) unless block_given?
-      request = Net::HTTP::Get.new(@uri)
-      Net::HTTP.start(
-        @uri.host, @uri.port, use_ssl: @uri.scheme == 'https'
-      ) do |http|
-        http.request(request) do |response|
-          fail response.body if error?(response)
-          enumerate_response(response, &block)
-        end
+      self.class.http.request(@uri) do |response|
+        fail response.body if error?(response)
+        enumerate_response(response, &block)
       end
     end
 

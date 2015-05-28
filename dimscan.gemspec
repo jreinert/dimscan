@@ -33,4 +33,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'mini_magick', '~> 4.1'
   spec.add_dependency 'abstractize', '~> 0.1'
+  spec.add_dependency 'net-http-persistent', '~> 2.9'
 end
